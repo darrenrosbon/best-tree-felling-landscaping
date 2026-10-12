@@ -116,8 +116,7 @@ main > section.facts { padding-bottom: 8px; }
 .site-head {
   position: sticky; top: 0; z-index: 40;
   height: var(--head-h);
-  background: color-mix(in srgb, var(--paper) 92%, transparent);
-  backdrop-filter: blur(10px);
+  background: var(--paper);
   border-bottom: 1px solid var(--line);
 }
 .head-in { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
@@ -157,6 +156,9 @@ main > section.facts { padding-bottom: 8px; }
   color: var(--ink); background: var(--paper);
   overflow: hidden;
 }
+.img-fade { opacity: 0; transition: opacity .8s cubic-bezier(.22, 1, .36, 1); }
+.img-fade.loaded { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .img-fade { opacity: 1; transition: none; } }
 .hero-img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
 .hero::after {
   content: ""; position: absolute; inset: 0; z-index: -1;
@@ -200,18 +202,25 @@ main > section.section.process { position: relative; isolation: isolate; overflo
 /* Photo is dimmed with a filter and masked with an eased, long gradient, so it
    dissolves into the page colour with no visible band or edge. */
 .process-bg {
-  position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%;
+  position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%;
   object-fit: cover; object-position: 50% 60%;
-  filter: brightness(.5) saturate(.9);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.03) 5%, rgba(0,0,0,.12) 11%, rgba(0,0,0,.3) 18%, rgba(0,0,0,.55) 26%, rgba(0,0,0,.8) 34%, rgba(0,0,0,.95) 42%, #000 50%, #000 56%, rgba(0,0,0,.95) 62%, rgba(0,0,0,.8) 70%, rgba(0,0,0,.55) 78%, rgba(0,0,0,.3) 85%, rgba(0,0,0,.12) 91%, rgba(0,0,0,.03) 96%, transparent 100%);
-  mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.03) 5%, rgba(0,0,0,.12) 11%, rgba(0,0,0,.3) 18%, rgba(0,0,0,.55) 26%, rgba(0,0,0,.8) 34%, rgba(0,0,0,.95) 42%, #000 50%, #000 56%, rgba(0,0,0,.95) 62%, rgba(0,0,0,.8) 70%, rgba(0,0,0,.55) 78%, rgba(0,0,0,.3) 85%, rgba(0,0,0,.12) 91%, rgba(0,0,0,.03) 96%, transparent 100%);
+}
+/* Dimming and the fade use the page colour itself, so they blend with no band.
+   Plain gradients are far cheaper to scroll than a mask plus a filter. */
+.process::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(180deg,
+      rgb(16, 26, 20) 0%, rgba(16, 26, 20, .94) 6%, rgba(16, 26, 20, .82) 12%, rgba(16, 26, 20, .68) 19%,
+      rgba(16, 26, 20, .55) 27%, rgba(16, 26, 20, .5) 36%, rgba(16, 26, 20, .5) 62%,
+      rgba(16, 26, 20, .6) 70%, rgba(16, 26, 20, .75) 78%, rgba(16, 26, 20, .88) 86%,
+      rgba(16, 26, 20, .96) 93%, rgb(16, 26, 20) 100%);
 }
 .process h2 { max-width: 14ch; }
 .process-list { list-style: none; margin: 36px 0 0; padding: 0; display: grid; gap: 14px; }
 .process-list li {
   padding: 22px; border-radius: var(--radius);
-  background: rgba(16, 26, 20, .66); border: 1px solid rgba(251, 249, 244, .14);
-  backdrop-filter: blur(10px);
+  background: rgba(16, 26, 20, .78); border: 1px solid rgba(251, 249, 244, .14);
 }
 .p-ico { width: 52px; height: 52px; border-radius: var(--radius); background: var(--leaf); color: var(--on-forest); display: grid; place-items: center; font-size: 1.5rem; margin-bottom: 16px; }
 .process-list h3 { font-size: 1.4rem; }
@@ -220,7 +229,7 @@ main > section.section.process { position: relative; isolation: isolate; overflo
 /* ---------- Work gallery ---------- */
 .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 36px; }
 .gallery figure { margin: 0; border-radius: var(--radius); overflow: hidden; background: var(--paper-2); }
-.gallery img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 1 / 1; display: block; transition: transform .6s cubic-bezier(.16, 1, .3, 1); }
+.gallery img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 1 / 1; display: block; transition: transform .6s cubic-bezier(.16, 1, .3, 1), opacity .8s cubic-bezier(.22, 1, .36, 1); }
 .gallery figure:hover img { transform: scale(1.04); }
 .gallery .wide { grid-column: 1 / -1; }
 .gallery .wide img { aspect-ratio: 16 / 9; }
@@ -247,7 +256,7 @@ main > section.section.process { position: relative; isolation: isolate; overflo
 .map-pill {
   position: absolute; left: 10px; bottom: 30px;
   display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px;
-  background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(8px);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
   border-radius: var(--radius); box-shadow: var(--shadow);
 }
 .map-pill .ico { flex: none; width: 32px; height: 32px; border-radius: 10px; background: var(--forest); color: var(--on-forest); display: grid; place-items: center; font-size: 1.1rem; }
@@ -314,11 +323,11 @@ footer ul li { padding: 5px 0; }
 
 /* ---------- Motion ---------- */
 @media (prefers-reduced-motion: no-preference) {
-  .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.16, 1, .3, 1), transform .7s cubic-bezier(.16, 1, .3, 1); }
-  .reveal.in { opacity: 1; transform: none; }
-  .reveal:nth-child(2) { transition-delay: .08s; }
-  .reveal:nth-child(3) { transition-delay: .16s; }
-  .reveal:nth-child(n+4) { transition-delay: .24s; }
+  .reveal { opacity: 0; transform: translateY(14px); will-change: opacity, transform; transition: opacity .6s cubic-bezier(.22, 1, .36, 1), transform .6s cubic-bezier(.22, 1, .36, 1); }
+  .reveal.in { opacity: 1; transform: none; will-change: auto; }
+  .reveal:nth-child(2) { transition-delay: .06s; }
+  .reveal:nth-child(3) { transition-delay: .12s; }
+  .reveal:nth-child(n+4) { transition-delay: .18s; }
   .hero-in > * { animation: rise .9s cubic-bezier(.16, 1, .3, 1) both; }
   .hero-in > :nth-child(2) { animation-delay: .1s; }
   .hero-in > :nth-child(3) { animation-delay: .2s; }
@@ -371,6 +380,7 @@ footer ul li { padding: 5px 0; }
   .process-list li:nth-child(3) { margin-top: 96px; }
 }
 </style>
+<noscript><style>.img-fade { opacity: 1; }</style></noscript>
 </head>
 <body>
 
@@ -405,8 +415,8 @@ footer ul li { padding: 5px 0; }
 
   <!-- Hero: image first, text overlaid -->
   <section class="hero" aria-labelledby="hero-title">
-    <img class="hero-img"
-         src="https://images.pexels.com/photos/38149495/pexels-photo-38149495.jpeg?auto=compress&cs=tinysrgb&w=1800"
+    <img class="hero-img img-fade" decoding="async"
+         src="https://images.pexels.com/photos/38149495/pexels-photo-38149495.jpeg?auto=compress&cs=tinysrgb&w=1000" srcset="https://images.pexels.com/photos/38149495/pexels-photo-38149495.jpeg?auto=compress&cs=tinysrgb&w=640 640w, https://images.pexels.com/photos/38149495/pexels-photo-38149495.jpeg?auto=compress&cs=tinysrgb&w=1000 1000w, https://images.pexels.com/photos/38149495/pexels-photo-38149495.jpeg?auto=compress&cs=tinysrgb&w=1400 1400w, https://images.pexels.com/photos/38149495/pexels-photo-38149495.jpeg?auto=compress&cs=tinysrgb&w=1800 1800w" sizes="100vw"
          alt="Looking up into a lush green tree canopy"
          fetchpriority="high">
     <div class="wrap hero-in">
@@ -447,8 +457,8 @@ footer ul li { padding: 5px 0; }
 
       <div class="services-grid">
         <article class="svc reveal">
-          <img class="svc-img" loading="lazy"
-               src="https://images.pexels.com/photos/33946652/pexels-photo-33946652.jpeg?auto=compress&cs=tinysrgb&w=1000"
+          <img class="svc-img img-fade" decoding="async" loading="lazy"
+               src="https://images.pexels.com/photos/33946652/pexels-photo-33946652.jpeg?auto=compress&cs=tinysrgb&w=800" srcset="https://images.pexels.com/photos/33946652/pexels-photo-33946652.jpeg?auto=compress&cs=tinysrgb&w=500 500w, https://images.pexels.com/photos/33946652/pexels-photo-33946652.jpeg?auto=compress&cs=tinysrgb&w=800 800w, https://images.pexels.com/photos/33946652/pexels-photo-33946652.jpeg?auto=compress&cs=tinysrgb&w=1100 1100w" sizes="(min-width: 768px) 50vw, 100vw"
                alt="Chainsaw cutting a log, sawdust flying">
           <div class="svc-body">
             <h3>Tree work</h3>
@@ -464,8 +474,8 @@ footer ul li { padding: 5px 0; }
         </article>
 
         <article class="svc reveal">
-          <img class="svc-img" loading="lazy"
-               src="https://images.pexels.com/photos/4920283/pexels-photo-4920283.jpeg?auto=compress&cs=tinysrgb&w=1000"
+          <img class="svc-img img-fade" decoding="async" loading="lazy"
+               src="https://images.pexels.com/photos/4920283/pexels-photo-4920283.jpeg?auto=compress&cs=tinysrgb&w=800" srcset="https://images.pexels.com/photos/4920283/pexels-photo-4920283.jpeg?auto=compress&cs=tinysrgb&w=500 500w, https://images.pexels.com/photos/4920283/pexels-photo-4920283.jpeg?auto=compress&cs=tinysrgb&w=800 800w, https://images.pexels.com/photos/4920283/pexels-photo-4920283.jpeg?auto=compress&cs=tinysrgb&w=1100 1100w" sizes="(min-width: 768px) 50vw, 100vw"
                alt="Gardener trimming a hedge in a sunny garden">
           <div class="svc-body">
             <h3>Garden and landscaping</h3>
@@ -486,7 +496,7 @@ footer ul li { padding: 5px 0; }
 
   <!-- Process -->
   <section class="section process" aria-labelledby="process-title">
-    <img class="process-bg" src="https://images.pexels.com/photos/28531913/pexels-photo-28531913.jpeg?auto=compress&cs=tinysrgb&w=1800" alt="" loading="lazy">
+    <img class="process-bg img-fade" decoding="async" src="https://images.pexels.com/photos/28531913/pexels-photo-28531913.jpeg?auto=compress&cs=tinysrgb&w=1000" srcset="https://images.pexels.com/photos/28531913/pexels-photo-28531913.jpeg?auto=compress&cs=tinysrgb&w=640 640w, https://images.pexels.com/photos/28531913/pexels-photo-28531913.jpeg?auto=compress&cs=tinysrgb&w=1000 1000w, https://images.pexels.com/photos/28531913/pexels-photo-28531913.jpeg?auto=compress&cs=tinysrgb&w=1400 1400w, https://images.pexels.com/photos/28531913/pexels-photo-28531913.jpeg?auto=compress&cs=tinysrgb&w=1800 1800w" sizes="100vw" alt="" loading="lazy">
     <div class="wrap">
       <h2 id="process-title" class="reveal">How it works</h2>
       <ol class="process-list">
@@ -515,11 +525,11 @@ footer ul li { padding: 5px 0; }
       <h2 class="reveal">Our work</h2>
       <p class="lead reveal">Examples of the jobs we take on.</p>
       <div class="gallery">
-        <figure class="wide reveal"><img loading="lazy" src="https://images.pexels.com/photos/38532920/pexels-photo-38532920.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Crew maintaining a park lawn and edges"></figure>
-        <figure class="reveal"><img loading="lazy" src="https://images.pexels.com/photos/7509490/pexels-photo-7509490.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Worker pruning branches against a blue sky"></figure>
-        <figure class="reveal"><img loading="lazy" src="https://images.pexels.com/photos/4920288/pexels-photo-4920288.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Gardener trimming a row of conifers"></figure>
-        <figure class="reveal"><img loading="lazy" src="https://images.pexels.com/photos/6014520/pexels-photo-6014520.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Worker using a string trimmer on the edge of a garden"></figure>
-        <figure class="reveal"><img loading="lazy" src="https://images.pexels.com/photos/4920263/pexels-photo-4920263.jpeg?auto=compress&cs=tinysrgb&w=1400" alt="Gardener standing among well kept trees in a nursery"></figure>
+        <figure class="wide reveal"><img class="img-fade" decoding="async" loading="lazy" src="https://images.pexels.com/photos/38532920/pexels-photo-38532920.jpeg?auto=compress&cs=tinysrgb&w=900" srcset="https://images.pexels.com/photos/38532920/pexels-photo-38532920.jpeg?auto=compress&cs=tinysrgb&w=600 600w, https://images.pexels.com/photos/38532920/pexels-photo-38532920.jpeg?auto=compress&cs=tinysrgb&w=900 900w, https://images.pexels.com/photos/38532920/pexels-photo-38532920.jpeg?auto=compress&cs=tinysrgb&w=1400 1400w" sizes="(min-width: 768px) 66vw, 100vw" alt="Crew maintaining a park lawn and edges"></figure>
+        <figure class="reveal"><img class="img-fade" decoding="async" loading="lazy" src="https://images.pexels.com/photos/7509490/pexels-photo-7509490.jpeg?auto=compress&cs=tinysrgb&w=600" srcset="https://images.pexels.com/photos/7509490/pexels-photo-7509490.jpeg?auto=compress&cs=tinysrgb&w=400 400w, https://images.pexels.com/photos/7509490/pexels-photo-7509490.jpeg?auto=compress&cs=tinysrgb&w=600 600w, https://images.pexels.com/photos/7509490/pexels-photo-7509490.jpeg?auto=compress&cs=tinysrgb&w=800 800w" sizes="(min-width: 768px) 33vw, 50vw" alt="Worker pruning branches against a blue sky"></figure>
+        <figure class="reveal"><img class="img-fade" decoding="async" loading="lazy" src="https://images.pexels.com/photos/4920288/pexels-photo-4920288.jpeg?auto=compress&cs=tinysrgb&w=600" srcset="https://images.pexels.com/photos/4920288/pexels-photo-4920288.jpeg?auto=compress&cs=tinysrgb&w=400 400w, https://images.pexels.com/photos/4920288/pexels-photo-4920288.jpeg?auto=compress&cs=tinysrgb&w=600 600w, https://images.pexels.com/photos/4920288/pexels-photo-4920288.jpeg?auto=compress&cs=tinysrgb&w=800 800w" sizes="(min-width: 768px) 33vw, 50vw" alt="Gardener trimming a row of conifers"></figure>
+        <figure class="reveal"><img class="img-fade" decoding="async" loading="lazy" src="https://images.pexels.com/photos/6014520/pexels-photo-6014520.jpeg?auto=compress&cs=tinysrgb&w=600" srcset="https://images.pexels.com/photos/6014520/pexels-photo-6014520.jpeg?auto=compress&cs=tinysrgb&w=400 400w, https://images.pexels.com/photos/6014520/pexels-photo-6014520.jpeg?auto=compress&cs=tinysrgb&w=600 600w, https://images.pexels.com/photos/6014520/pexels-photo-6014520.jpeg?auto=compress&cs=tinysrgb&w=800 800w" sizes="(min-width: 768px) 33vw, 50vw" alt="Worker using a string trimmer on the edge of a garden"></figure>
+        <figure class="reveal"><img class="img-fade" decoding="async" loading="lazy" src="https://images.pexels.com/photos/4920263/pexels-photo-4920263.jpeg?auto=compress&cs=tinysrgb&w=600" srcset="https://images.pexels.com/photos/4920263/pexels-photo-4920263.jpeg?auto=compress&cs=tinysrgb&w=400 400w, https://images.pexels.com/photos/4920263/pexels-photo-4920263.jpeg?auto=compress&cs=tinysrgb&w=600 600w, https://images.pexels.com/photos/4920263/pexels-photo-4920263.jpeg?auto=compress&cs=tinysrgb&w=800 800w" sizes="(min-width: 768px) 33vw, 50vw" alt="Gardener standing among well kept trees in a nursery"></figure>
       </div>
     </div>
   </section>
@@ -552,7 +562,7 @@ footer ul li { padding: 5px 0; }
     <div class="wrap">
       <div class="quote-card reveal">
         <div class="map">
-          <iframe title="Map of Randburg, Johannesburg" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          <iframe class="img-fade" title="Map of Randburg, Johannesburg" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
                   src="https://www.google.com/maps?q=Randburg,+Johannesburg&z=12&output=embed"></iframe>
           <div class="map-pill">
             <span class="ico"><i class="ph-bold ph-map-pin" aria-hidden="true"></i></span>
@@ -674,7 +684,7 @@ footer ul li { padding: 5px 0; }
       entries.forEach(function (en) {
         if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
       });
-    }, { threshold: 0.12 });
+    }, { threshold: 0, rootMargin: "0px 0px -6% 0px" });
     els.forEach(function (el) { io.observe(el); });
   } else {
     els.forEach(function (el) { el.classList.add("in"); });
@@ -723,6 +733,19 @@ footer ul li { padding: 5px 0; }
     });
     watched.forEach(function (el) { if (el) fabIo.observe(el); });
   }
+
+  /* Fade media in once decoded, so nothing pops */
+  document.querySelectorAll(".img-fade").forEach(function (el) {
+    function done() { el.classList.add("loaded"); }
+    if (el.tagName === "IMG") {
+      if (el.complete && el.naturalWidth) { done(); return; }
+      el.addEventListener("load", done, { once: true });
+      el.addEventListener("error", done, { once: true });
+    } else {
+      el.addEventListener("load", done, { once: true });
+      setTimeout(done, 3000);
+    }
+  });
 
   document.getElementById("yr").textContent = new Date().getFullYear();
 })();
