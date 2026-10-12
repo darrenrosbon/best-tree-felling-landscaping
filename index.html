@@ -6,6 +6,8 @@
 <title>Best Tree Felling and Landscaping | Randburg</title>
 <meta name="description" content="Tree felling, pruning, stump removal and landscaping in Randburg and surrounds. Free quotes, Mon-Fri 7:30 to 4:30.">
 <meta name="theme-color" content="#101a14">
+<link rel="preload" as="image" media="(max-width: 767px)" imagesrcset="img/hero-480.webp 480w, img/hero-800.webp 800w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" media="(min-width: 768px)" imagesrcset="img/hero-480.webp 480w, img/hero-800.webp 800w, img/hero-1200.webp 1200w" imagesizes="100vw" fetchpriority="high">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -14,7 +16,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css">
 
 <style>
 /* ---------- Tokens (swap these to re-theme) ---------- */
@@ -104,7 +105,8 @@ main > section.facts { padding-bottom: 8px; }
   transition: transform .2s cubic-bezier(.16, 1, .3, 1), background-color .2s, color .2s, border-color .2s;
 }
 .btn:active { transform: translateY(1px) scale(.98); }
-.btn i { font-size: 1.25rem; }
+.ico { width: 1em; height: 1em; fill: currentColor; flex: none; }
+.btn .ico { font-size: 1.25rem; }
 .btn-solid { background: var(--forest); color: var(--on-forest); }
 .btn-solid:hover { background: color-mix(in srgb, var(--forest) 85%, white); }
 .btn-light { background: var(--ink); color: var(--on-forest); }
@@ -156,6 +158,7 @@ main > section.facts { padding-bottom: 8px; }
   color: var(--ink); background: var(--paper);
   overflow: hidden;
 }
+.ph { background-size: cover; background-position: center; }
 .img-fade { opacity: 0; transition: opacity .8s cubic-bezier(.22, 1, .36, 1); }
 .img-fade.loaded { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .img-fade { opacity: 1; transition: none; } }
@@ -185,7 +188,8 @@ main > section.facts { padding-bottom: 8px; }
 /* ---------- Services ---------- */
 .services-grid { display: grid; gap: 20px; margin-top: 36px; }
 .svc { position: relative; display: flex; flex-direction: column; border-radius: var(--radius); overflow: hidden; background: var(--paper-2); border: 1px solid var(--line); }
-.svc-img { aspect-ratio: 4 / 3; width: 100%; object-fit: cover; flex: none; }
+.media { aspect-ratio: 4 / 3; flex: none; overflow: hidden; background-size: cover; background-position: center; }
+.media img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .svc-body { padding: 24px 22px 26px; flex: 1; }
 .svc-body p { color: var(--ink-soft); margin-top: 8px; }
 .chips { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
@@ -195,10 +199,10 @@ main > section.facts { padding-bottom: 8px; }
   background: var(--paper); border: 1px solid var(--line);
   font-weight: 500; font-size: .95rem;
 }
-.chips i { color: var(--forest); }
+.chips .ico { color: var(--forest); }
 
 /* ---------- Process ---------- */
-main > section.section.process { position: relative; isolation: isolate; overflow: hidden; background: var(--paper); color: var(--ink); padding-block: 128px 144px; }
+main > section.section.process { position: relative; isolation: isolate; overflow: hidden; color: var(--ink); padding-block: 128px 144px; }
 /* Photo is dimmed with a filter and masked with an eased, long gradient, so it
    dissolves into the page colour with no visible band or edge. */
 .process-bg {
@@ -248,24 +252,35 @@ main > section.section.process { position: relative; isolation: isolate; overflo
 
 /* ---------- Quote ---------- */
 .quote-card { border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper-2); overflow: hidden; }
-.map { position: relative; min-height: 240px; background: var(--paper-2); }
-.map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: saturate(.7) contrast(1.02); }
-@media all {  /* dark theme is always on; add data-theme="light" to <html> to disable */
-  :root:not([data-theme="light"]) .map iframe { filter: saturate(.6) brightness(.8) contrast(1.05); }
+.map { position: relative; min-height: 240px; background: var(--paper-2); overflow: hidden; }
+.map-static { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; opacity: 0; transition: opacity .5s ease; }
+.map.live iframe { opacity: 1; }
+.map.live .map-static, .map.live .map-pin, .map.live .map-load, .map.live .map-credit { display: none; }
+.map-pin { position: absolute; left: 50%; top: 50%; width: 42px; height: 42px; margin: -42px 0 0 -21px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: var(--leaf); color: var(--on-forest); display: grid; place-items: center; box-shadow: 0 8px 18px -6px rgba(0,0,0,.7); }
+.map-pin .ico { transform: rotate(45deg); font-size: 1.25rem; }
+.map-open, .map-load {
+  position: absolute; top: 10px; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 12px;
+  border-radius: var(--radius); border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+  font: 700 .85rem/1 "DM Sans", sans-serif; text-decoration: none; cursor: pointer;
 }
+.map-open { left: 10px; }
+.map-load { right: 10px; background: var(--leaf); color: var(--on-forest); border-color: transparent; }
+.map-load:active { transform: scale(.97); }
+.map-credit { position: absolute; right: 8px; bottom: 6px; font-size: .68rem; color: var(--ink-soft); opacity: .85; }
 .map-pill {
-  position: absolute; left: 10px; bottom: 30px;
+  position: absolute; left: 10px; bottom: 10px;
   display: inline-flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px;
   background: color-mix(in srgb, var(--paper) 94%, transparent);
   border-radius: var(--radius); box-shadow: var(--shadow);
 }
-.map-pill .ico { flex: none; width: 32px; height: 32px; border-radius: 10px; background: var(--forest); color: var(--on-forest); display: grid; place-items: center; font-size: 1.1rem; }
+.map-pill .ico-tile { flex: none; width: 32px; height: 32px; border-radius: 10px; background: var(--forest); color: var(--on-forest); display: grid; place-items: center; font-size: 1.1rem; }
 .map-pill b { font-size: .9rem; line-height: 1.2; white-space: nowrap; }
 .quote-body { padding: 24px 18px 28px; display: grid; gap: 22px; }
 .quote-head { display: grid; gap: 16px; }
 .quote-facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-weight: 500; }
 .quote-facts li { display: flex; align-items: center; gap: 10px; }
-.quote-facts i { font-size: 1.25rem; color: var(--forest); }
+.quote-facts .ico { font-size: 1.25rem; color: var(--forest); }
 .quote-facts a { text-decoration: none; font-weight: 700; }
 .q-grid { display: grid; gap: 18px; }
 form { display: block; }
@@ -343,7 +358,7 @@ footer ul li { padding: 5px 0; }
   .facts li:first-child { padding-left: 0; }
   .facts li + li { border-left: 1px solid rgba(251, 249, 244, .14); }
   .services-grid { grid-template-columns: 1fr 1fr; align-items: stretch; }
-  .svc-img { aspect-ratio: 16 / 10; }
+  .media { aspect-ratio: 16 / 10; }
   .svc-body { padding: 28px 28px 32px; }
   .gallery { grid-template-columns: repeat(6, 1fr); grid-auto-rows: clamp(220px, 26vw, 320px); gap: 14px; }
   .gallery figure { grid-column: span 2; }
@@ -383,6 +398,7 @@ footer ul li { padding: 5px 0; }
 <noscript><style>.img-fade { opacity: 1; }</style></noscript>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><symbol id="i-arrow-right" viewBox="0 0 256 256"><path d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,140H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z"/></symbol><symbol id="i-arrow-up-right" viewBox="0 0 256 256"><path d="M204,64V168a12,12,0,0,1-24,0V93L72.49,200.49a12,12,0,0,1-17-17L163,76H88a12,12,0,0,1,0-24H192A12,12,0,0,1,204,64Z"/></symbol><symbol id="i-check" viewBox="0 0 256 256"><path d="M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z"/></symbol><symbol id="i-clipboard-text" viewBox="0 0 256 256"><path d="M172,164a12,12,0,0,1-12,12H96a12,12,0,0,1,0-24h64A12,12,0,0,1,172,164Zm-12-52H96a12,12,0,0,0,0,24h64a12,12,0,0,0,0-24Zm60-64V216a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V48A20,20,0,0,1,56,28H90.53a51.88,51.88,0,0,1,74.94,0H200A20,20,0,0,1,220,48ZM100.29,60h55.42a28,28,0,0,0-55.42,0ZM196,52H178.59A52.13,52.13,0,0,1,180,64v8a12,12,0,0,1-12,12H88A12,12,0,0,1,76,72V64a52.13,52.13,0,0,1,1.41-12H60V212H196Z"/></symbol><symbol id="i-clock" viewBox="0 0 256 256"><path d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm68-84a12,12,0,0,1-12,12H128a12,12,0,0,1-12-12V72a12,12,0,0,1,24,0v44h44A12,12,0,0,1,196,128Z"/></symbol><symbol id="i-list" viewBox="0 0 256 256"><path d="M228,128a12,12,0,0,1-12,12H40a12,12,0,0,1,0-24H216A12,12,0,0,1,228,128ZM40,76H216a12,12,0,0,0,0-24H40a12,12,0,0,0,0,24ZM216,180H40a12,12,0,0,0,0,24H216a12,12,0,0,0,0-24Z"/></symbol><symbol id="i-map-pin" viewBox="0 0 256 256"><path d="M128,60a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,60Zm0,64a20,20,0,1,1,20-20A20,20,0,0,1,128,124Zm0-112a92.1,92.1,0,0,0-92,92c0,77.36,81.64,135.4,85.12,137.83a12,12,0,0,0,13.76,0,259,259,0,0,0,42.18-39C205.15,170.57,220,136.37,220,104A92.1,92.1,0,0,0,128,12Zm31.3,174.71A249.35,249.35,0,0,1,128,216.89a249.35,249.35,0,0,1-31.3-30.18C80,167.37,60,137.31,60,104a68,68,0,0,1,136,0C196,137.31,176,167.37,159.3,186.71Z"/></symbol><symbol id="i-phone" viewBox="0 0 256 256"><path d="M224,154.8l-47.09-21.11-.18-.08a19.94,19.94,0,0,0-19,1.75,13.08,13.08,0,0,0-1.12.84l-22.31,19c-13-7.05-26.43-20.37-33.49-33.21l19.06-22.66a11.76,11.76,0,0,0,.85-1.15,20,20,0,0,0,1.66-18.83,1.42,1.42,0,0,1-.08-.18L101.2,32A20.06,20.06,0,0,0,80.42,20.15,60.27,60.27,0,0,0,28,80c0,81.61,66.39,148,148,148a60.27,60.27,0,0,0,59.85-52.42A20.06,20.06,0,0,0,224,154.8ZM176,204A124.15,124.15,0,0,1,52,80,36.29,36.29,0,0,1,80.48,44.46l18.82,42L80.14,109.28a12,12,0,0,0-.86,1.16A20,20,0,0,0,78,130.08c9.42,19.28,28.83,38.56,48.31,48A20,20,0,0,0,146,176.63a11.63,11.63,0,0,0,1.11-.85l22.43-19.07,42,18.81A36.29,36.29,0,0,1,176,204Z"/></symbol><symbol id="i-plant" viewBox="0 0 256 256"><path d="M255.62,51.65a12,12,0,0,0-11.27-11.27c-53.27-3.13-96.2,13.36-114.84,44.14-12.14,20-12.56,44.17-1.46,67.3a75.14,75.14,0,0,0-12.28,23l-12.66-12.66c7.19-16.77,6.43-34.11-2.4-48.69C86.73,90.36,54.89,78,15.55,80.27A12,12,0,0,0,4.28,91.55C2,130.89,14.36,162.73,37.45,176.71a49.76,49.76,0,0,0,26,7.27,57.54,57.54,0,0,0,22.7-4.87L112,205v23a12,12,0,0,0,24,0V198.51a51.63,51.63,0,0,1,9.49-29.95,76.82,76.82,0,0,0,32.1,7.39,64.91,64.91,0,0,0,33.89-9.46C242.25,147.85,258.76,104.92,255.62,51.65ZM49.88,156.18c-13.19-8-21.18-27.46-21.83-52.13,24.67.65,44.14,8.64,52.13,21.83a26,26,0,0,1,3.63,17L72.48,131.51a12,12,0,0,0-17,17l11.34,11.34A26.27,26.27,0,0,1,49.88,156.18ZM199.05,146c-10.66,6.45-23,7.67-35.81,3.76l37.25-37.24a12,12,0,0,0-17-17l-37.25,37.24C142.37,120,143.59,107.61,150,97c12.7-21,42.65-33,81.32-33H232C232.14,103,220.14,133.18,199.05,146Z"/></symbol><symbol id="i-whatsapp-logo" viewBox="0 0 256 256"><path d="M187.3,159.06A36.09,36.09,0,0,1,152,188a84.09,84.09,0,0,1-84-84A36.09,36.09,0,0,1,96.94,68.7,12,12,0,0,1,110,75.1l11.48,23a12,12,0,0,1-.75,12l-8.52,12.78a44.56,44.56,0,0,0,20.91,20.91l12.78-8.52a12,12,0,0,1,12-.75l23,11.48A12,12,0,0,1,187.3,159.06ZM236,128A108,108,0,0,1,78.77,224.15L46.34,235A20,20,0,0,1,21,209.66l10.81-32.43A108,108,0,1,1,236,128Zm-24,0A84,84,0,1,0,55.27,170.06a12,12,0,0,1,1,9.81l-9.93,29.79,29.79-9.93a12.1,12.1,0,0,1,3.8-.62,12,12,0,0,1,6,1.62A84,84,0,0,0,212,128Z"/></symbol><symbol id="i-x" viewBox="0 0 256 256"><path d="M208.49,191.51a12,12,0,0,1-17,17L128,145,64.49,208.49a12,12,0,0,1-17-17L111,128,47.51,64.49a12,12,0,0,1,17-17L128,111l63.51-63.52a12,12,0,0,1,17,17L145,128Z"/></symbol><symbol id="i-hand-tap" viewBox="0 0 256 256"><path d="M228,156v36c0,13.85-1.63,26.52-4.58,35.68a12,12,0,1,1-22.84-7.36c2.14-6.65,3.42-17.24,3.42-28.32V156a8,8,0,0,0-16,0v4a12,12,0,0,1-24,0V140a8,8,0,0,0-16,0v12a12,12,0,0,1-24,0V84a8,8,0,0,0-16,0V192a12,12,0,0,1-22.18,6.34l-18.68-30-.21-.34A8,8,0,0,0,53,175.92L78.27,217.8a12,12,0,0,1-20.56,12.39l-25.31-42-.12-.2A32,32,0,0,1,84,150.83V84a32,32,0,0,1,64,0v25a32,32,0,0,1,36.78,17A32,32,0,0,1,228,156ZM56,96A12,12,0,0,0,68,84a48,48,0,0,1,96,0,12,12,0,0,0,24,0A72,72,0,0,0,44,84,12,12,0,0,0,56,96Z"/></symbol></defs></svg>
 
 <header class="site-head">
   <div class="wrap head-in">
@@ -396,35 +412,35 @@ footer ul li { padding: 5px 0; }
       <a href="#areas">Areas</a>
       <a href="#quote">Quote</a>
     </nav>
-    <a class="btn btn-solid head-cta" href="tel:+27765342661"><i class="ph-bold ph-phone" aria-hidden="true"></i>076 534 2661</a>
+    <a class="btn btn-solid head-cta" href="tel:+27765342661"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>076 534 2661</a>
     <button class="burger" id="burger" aria-expanded="false" aria-controls="menu" aria-label="Open menu">
-      <i class="ph-bold ph-list" aria-hidden="true"></i>
+      <svg class="ico" aria-hidden="true"><use href="#i-list"/></svg>
     </button>
   </div>
 </header>
 
 <nav class="nav-mobile" id="menu" aria-label="Mobile">
-  <a class="link" href="#services">Services <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
-  <a class="link" href="#work">Our work <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
-  <a class="link" href="#areas">Areas and hours <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
-  <a class="link" href="#quote">Quote <i class="ph-bold ph-arrow-right" aria-hidden="true"></i></a>
-  <a class="btn btn-solid" href="tel:+27765342661"><i class="ph-bold ph-phone" aria-hidden="true"></i>Call 076 534 2661</a>
+  <a class="link" href="#services">Services <svg class="ico" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+  <a class="link" href="#work">Our work <svg class="ico" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+  <a class="link" href="#areas">Areas and hours <svg class="ico" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+  <a class="link" href="#quote">Quote <svg class="ico" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+  <a class="btn btn-solid" href="tel:+27765342661"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>Call 076 534 2661</a>
 </nav>
 
 <main id="top">
 
   <!-- Hero: image first, text overlaid -->
-  <section class="hero" aria-labelledby="hero-title">
-    <img class="hero-img img-fade" decoding="async"
-         src="https://images.pexels.com/photos/38149495/pexels-photo-38149495.jpeg?auto=compress&cs=tinysrgb&w=1000" srcset="https://images.pexels.com/photos/38149495/pexels-photo-38149495.jpeg?auto=compress&cs=tinysrgb&w=640 640w, https://images.pexels.com/photos/38149495/pexels-photo-38149495.jpeg?auto=compress&cs=tinysrgb&w=1000 1000w, https://images.pexels.com/photos/38149495/pexels-photo-38149495.jpeg?auto=compress&cs=tinysrgb&w=1400 1400w, https://images.pexels.com/photos/38149495/pexels-photo-38149495.jpeg?auto=compress&cs=tinysrgb&w=1800 1800w" sizes="100vw"
-         alt="Looking up into a lush green tree canopy"
-         fetchpriority="high">
+  <section class="hero ph" aria-labelledby="hero-title" style="background-image:url(data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADQAwCdASoUAA0APu1iqU2ppaOiMAgBMB2JYwCdMoACEenYcQgBTYAA/rwmo/oQAg3TaiVsMe3r4XNC30MhgdKvbyhvZpsqZGUwgnbwkZk6cKIWvICBOXmHied64A06sDx8/ikmzeMOYVZBcycqLFIgAAA=)">
+    <picture>
+      <source media="(min-width: 768px)" srcset="img/hero-480.webp 480w, img/hero-800.webp 800w, img/hero-1200.webp 1200w" sizes="100vw">
+      <img class="hero-img img-fade" src="img/hero-800.webp" srcset="img/hero-480.webp 480w, img/hero-800.webp 800w" sizes="100vw" width="2000" height="1333" alt="Looking up into a lush green tree canopy" fetchpriority="high" decoding="async">
+    </picture>
     <div class="wrap hero-in">
       <h1 id="hero-title">Best Tree Felling and Landscaping</h1>
       <p>Tree felling, pruning and garden work across Randburg. Message us for a quote.</p>
       <div class="hero-cta">
-        <a class="btn btn-light" href="#quote"><i class="ph-bold ph-whatsapp-logo" aria-hidden="true"></i>Get a free quote</a>
-        <a class="btn btn-outline" href="tel:+27765342661"><i class="ph-bold ph-phone" aria-hidden="true"></i>Call 076 534 2661</a>
+        <a class="btn btn-light" href="#quote"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp-logo"/></svg>Get a free quote</a>
+        <a class="btn btn-outline" href="tel:+27765342661"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>Call 076 534 2661</a>
       </div>
     </div>
   </section>
@@ -433,17 +449,17 @@ footer ul li { padding: 5px 0; }
     <div class="wrap">
       <ul>
         <li>
-          <span class="f-ico"><i class="ph-bold ph-map-pin" aria-hidden="true"></i></span>
+          <span class="f-ico"><svg class="ico" aria-hidden="true"><use href="#i-map-pin"/></svg></span>
           <span class="f-text"><span class="f-lab">Service area</span><span class="f-val">Randburg and surrounds</span></span>
         </li>
         <li>
-          <span class="f-ico"><i class="ph-bold ph-clock" aria-hidden="true"></i></span>
+          <span class="f-ico"><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg></span>
           <span class="f-text"><span class="f-lab">Working hours</span><span class="f-val">Mon-Fri, 7:30 to 4:30</span></span>
         </li>
         <li>
-          <span class="f-ico"><i class="ph-bold ph-phone" aria-hidden="true"></i></span>
+          <span class="f-ico"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg></span>
           <span class="f-text"><span class="f-lab">Call or WhatsApp</span><a class="f-val" href="tel:+27765342661">+27 76 534 2661</a></span>
-          <i class="ph-bold ph-arrow-up-right f-arrow" aria-hidden="true"></i>
+          <svg class="ico f-arrow" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
         </li>
       </ul>
     </div>
@@ -457,36 +473,32 @@ footer ul li { padding: 5px 0; }
 
       <div class="services-grid">
         <article class="svc reveal">
-          <img class="svc-img img-fade" decoding="async" loading="lazy"
-               src="https://images.pexels.com/photos/33946652/pexels-photo-33946652.jpeg?auto=compress&cs=tinysrgb&w=800" srcset="https://images.pexels.com/photos/33946652/pexels-photo-33946652.jpeg?auto=compress&cs=tinysrgb&w=500 500w, https://images.pexels.com/photos/33946652/pexels-photo-33946652.jpeg?auto=compress&cs=tinysrgb&w=800 800w, https://images.pexels.com/photos/33946652/pexels-photo-33946652.jpeg?auto=compress&cs=tinysrgb&w=1100 1100w" sizes="(min-width: 768px) 50vw, 100vw"
-               alt="Chainsaw cutting a log, sawdust flying">
+          <div class="media ph" style="background-image:url(data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAADwAwCdASoUAA8APu1iqU2ppaOiMAgBMB2JYwCdABoQEsBh6olaT9+gAPa2HBta1yhJ3ILbv/5UP4eSK40gMNiOoCm8kcqP7bIXdBFii+1SIYpQWFv/I+l+spwjl9AodJsQky72jCftz7Tt+lC0mwvGQXEAAA==)"><img class="img-fade" decoding="async" loading="lazy" src="img/tree-800.webp" srcset="img/tree-480.webp 480w, img/tree-800.webp 800w, img/tree-1100.webp 1100w" sizes="(min-width: 768px) 50vw, 100vw" width="2000" height="1500" alt="Chainsaw cutting a log, sawdust flying"></div>
           <div class="svc-body">
             <h3>Tree work</h3>
             <p>Felling, pruning, stump removal and clearing for homes and small properties.</p>
             <ul class="chips">
-              <li><i class="ph-bold ph-check" aria-hidden="true"></i>Tree felling</li>
-              <li><i class="ph-bold ph-check" aria-hidden="true"></i>Pruning and trimming</li>
-              <li><i class="ph-bold ph-check" aria-hidden="true"></i>Stump removal</li>
-              <li><i class="ph-bold ph-check" aria-hidden="true"></i>Storm damage clean-up</li>
-              <li><i class="ph-bold ph-check" aria-hidden="true"></i>Wood and refuse removal</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Tree felling</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Pruning and trimming</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Stump removal</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Storm damage clean-up</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Wood and refuse removal</li>
             </ul>
           </div>
         </article>
 
         <article class="svc reveal">
-          <img class="svc-img img-fade" decoding="async" loading="lazy"
-               src="https://images.pexels.com/photos/4920283/pexels-photo-4920283.jpeg?auto=compress&cs=tinysrgb&w=800" srcset="https://images.pexels.com/photos/4920283/pexels-photo-4920283.jpeg?auto=compress&cs=tinysrgb&w=500 500w, https://images.pexels.com/photos/4920283/pexels-photo-4920283.jpeg?auto=compress&cs=tinysrgb&w=800 800w, https://images.pexels.com/photos/4920283/pexels-photo-4920283.jpeg?auto=compress&cs=tinysrgb&w=1100 1100w" sizes="(min-width: 768px) 50vw, 100vw"
-               alt="Gardener trimming a hedge in a sunny garden">
+          <div class="media ph" style="background-image:url(data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAACQAwCdASoUAA0APu1iqU2ppaQiMAgBMB2JQAAJQQEL3Q3CinA+AP7YTBZuhMrg4+xlstz4C5vVTzbGaPGN1uRznsrU6l9EoBa+u2/o7hT7fQHiin76m3HutM4+UR7IjH3HRfTOnbmsGvMitkRIG5Q0AAA=)"><img class="img-fade" decoding="async" loading="lazy" src="img/garden-800.webp" srcset="img/garden-480.webp 480w, img/garden-800.webp 800w, img/garden-1100.webp 1100w" sizes="(min-width: 768px) 50vw, 100vw" width="2000" height="1333" alt="Gardener trimming a hedge in a sunny garden"></div>
           <div class="svc-body">
             <h3>Garden and landscaping</h3>
             <p>Regular lawn and hedge maintenance, or a full landscaping project.</p>
             <ul class="chips">
-              <li><i class="ph-bold ph-check" aria-hidden="true"></i>Lawn mowing</li>
-              <li><i class="ph-bold ph-check" aria-hidden="true"></i>Hedge trimming</li>
-              <li><i class="ph-bold ph-check" aria-hidden="true"></i>Garden maintenance</li>
-              <li><i class="ph-bold ph-check" aria-hidden="true"></i>Planting and turf</li>
-              <li><i class="ph-bold ph-check" aria-hidden="true"></i>Landscaping and design</li>
-              <li><i class="ph-bold ph-check" aria-hidden="true"></i>Bush clearing</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Lawn mowing</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Hedge trimming</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Garden maintenance</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Planting and turf</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Landscaping and design</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Bush clearing</li>
             </ul>
           </div>
         </article>
@@ -495,23 +507,23 @@ footer ul li { padding: 5px 0; }
   </section>
 
   <!-- Process -->
-  <section class="section process" aria-labelledby="process-title">
-    <img class="process-bg img-fade" decoding="async" src="https://images.pexels.com/photos/28531913/pexels-photo-28531913.jpeg?auto=compress&cs=tinysrgb&w=1000" srcset="https://images.pexels.com/photos/28531913/pexels-photo-28531913.jpeg?auto=compress&cs=tinysrgb&w=640 640w, https://images.pexels.com/photos/28531913/pexels-photo-28531913.jpeg?auto=compress&cs=tinysrgb&w=1000 1000w, https://images.pexels.com/photos/28531913/pexels-photo-28531913.jpeg?auto=compress&cs=tinysrgb&w=1400 1400w, https://images.pexels.com/photos/28531913/pexels-photo-28531913.jpeg?auto=compress&cs=tinysrgb&w=1800 1800w" sizes="100vw" alt="" loading="lazy">
+  <section class="section process ph" aria-labelledby="process-title" style="background-image:url(data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAACQAwCdASoUAA0APu1iqU2ppaOiMAgBMB2JZACdABd3ry5NwYSAAP6hZjeqDzHp4mlAPGBQJ5hu1fZ9TYPJrSAGoEh2SaEy6fUcTRXs9lOZso7mhWbcANQK/HqOTLmlPwpblAnuWzo8HrscYoOPF3V5qcEAAA==)">
+    <img class="process-bg img-fade" src="img/process-800.webp" srcset="img/process-480.webp 480w, img/process-800.webp 800w, img/process-1200.webp 1200w" sizes="100vw" width="2000" height="1333" alt="" loading="lazy" decoding="async">
     <div class="wrap">
       <h2 id="process-title" class="reveal">How it works</h2>
       <ol class="process-list">
         <li class="reveal">
-          <div class="p-ico"><i class="ph-bold ph-whatsapp-logo" aria-hidden="true"></i></div>
+          <div class="p-ico"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp-logo"/></svg></div>
           <h3>Message us</h3>
           <p>Tell us what needs doing and send a photo if you can. We reply in working hours.</p>
         </li>
         <li class="reveal">
-          <div class="p-ico"><i class="ph-bold ph-clipboard-text" aria-hidden="true"></i></div>
+          <div class="p-ico"><svg class="ico" aria-hidden="true"><use href="#i-clipboard-text"/></svg></div>
           <h3>Get a quote</h3>
           <p>We look at the job and give you a price before any work starts.</p>
         </li>
         <li class="reveal">
-          <div class="p-ico"><i class="ph-bold ph-plant" aria-hidden="true"></i></div>
+          <div class="p-ico"><svg class="ico" aria-hidden="true"><use href="#i-plant"/></svg></div>
           <h3>We do the work</h3>
           <p>We do the job and clear up when we are finished.</p>
         </li>
@@ -525,11 +537,11 @@ footer ul li { padding: 5px 0; }
       <h2 class="reveal">Our work</h2>
       <p class="lead reveal">Examples of the jobs we take on.</p>
       <div class="gallery">
-        <figure class="wide reveal"><img class="img-fade" decoding="async" loading="lazy" src="https://images.pexels.com/photos/38532920/pexels-photo-38532920.jpeg?auto=compress&cs=tinysrgb&w=900" srcset="https://images.pexels.com/photos/38532920/pexels-photo-38532920.jpeg?auto=compress&cs=tinysrgb&w=600 600w, https://images.pexels.com/photos/38532920/pexels-photo-38532920.jpeg?auto=compress&cs=tinysrgb&w=900 900w, https://images.pexels.com/photos/38532920/pexels-photo-38532920.jpeg?auto=compress&cs=tinysrgb&w=1400 1400w" sizes="(min-width: 768px) 66vw, 100vw" alt="Crew maintaining a park lawn and edges"></figure>
-        <figure class="reveal"><img class="img-fade" decoding="async" loading="lazy" src="https://images.pexels.com/photos/7509490/pexels-photo-7509490.jpeg?auto=compress&cs=tinysrgb&w=600" srcset="https://images.pexels.com/photos/7509490/pexels-photo-7509490.jpeg?auto=compress&cs=tinysrgb&w=400 400w, https://images.pexels.com/photos/7509490/pexels-photo-7509490.jpeg?auto=compress&cs=tinysrgb&w=600 600w, https://images.pexels.com/photos/7509490/pexels-photo-7509490.jpeg?auto=compress&cs=tinysrgb&w=800 800w" sizes="(min-width: 768px) 33vw, 50vw" alt="Worker pruning branches against a blue sky"></figure>
-        <figure class="reveal"><img class="img-fade" decoding="async" loading="lazy" src="https://images.pexels.com/photos/4920288/pexels-photo-4920288.jpeg?auto=compress&cs=tinysrgb&w=600" srcset="https://images.pexels.com/photos/4920288/pexels-photo-4920288.jpeg?auto=compress&cs=tinysrgb&w=400 400w, https://images.pexels.com/photos/4920288/pexels-photo-4920288.jpeg?auto=compress&cs=tinysrgb&w=600 600w, https://images.pexels.com/photos/4920288/pexels-photo-4920288.jpeg?auto=compress&cs=tinysrgb&w=800 800w" sizes="(min-width: 768px) 33vw, 50vw" alt="Gardener trimming a row of conifers"></figure>
-        <figure class="reveal"><img class="img-fade" decoding="async" loading="lazy" src="https://images.pexels.com/photos/6014520/pexels-photo-6014520.jpeg?auto=compress&cs=tinysrgb&w=600" srcset="https://images.pexels.com/photos/6014520/pexels-photo-6014520.jpeg?auto=compress&cs=tinysrgb&w=400 400w, https://images.pexels.com/photos/6014520/pexels-photo-6014520.jpeg?auto=compress&cs=tinysrgb&w=600 600w, https://images.pexels.com/photos/6014520/pexels-photo-6014520.jpeg?auto=compress&cs=tinysrgb&w=800 800w" sizes="(min-width: 768px) 33vw, 50vw" alt="Worker using a string trimmer on the edge of a garden"></figure>
-        <figure class="reveal"><img class="img-fade" decoding="async" loading="lazy" src="https://images.pexels.com/photos/4920263/pexels-photo-4920263.jpeg?auto=compress&cs=tinysrgb&w=600" srcset="https://images.pexels.com/photos/4920263/pexels-photo-4920263.jpeg?auto=compress&cs=tinysrgb&w=400 400w, https://images.pexels.com/photos/4920263/pexels-photo-4920263.jpeg?auto=compress&cs=tinysrgb&w=600 600w, https://images.pexels.com/photos/4920263/pexels-photo-4920263.jpeg?auto=compress&cs=tinysrgb&w=800 800w" sizes="(min-width: 768px) 33vw, 50vw" alt="Gardener standing among well kept trees in a nursery"></figure>
+        <figure class="wide reveal ph" style="background-image:url(data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAACwAwCdASoUAA0APu1iqU2ppaOiMAgBMB2JagCdMoAB/X+YZjZrMAD+QQhHU35S5B0yosHtheNuUhfhQCAdXBZw1Nvy4y+3Ek/bsLgXNO/70xic7ZBKHf2OJVys3u++AAA=)"><img class="img-fade" loading="lazy" decoding="async" src="img/work-park-800.webp" srcset="img/work-park-480.webp 480w, img/work-park-800.webp 800w, img/work-park-1200.webp 1200w" sizes="(min-width: 768px) 66vw, 100vw" width="2000" height="1250" alt="Crew maintaining a park lawn and edges"></figure>
+        <figure class="reveal ph" style="background-image:url(data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADwAwCdASoUAAsAPu1iqU2ppaQiMAgBMB2JQBOmUABoM1NJUXUruWMsAP7DmxTry9Sj6KTcBuJBZ9fYUKlKNiAcqjFj6UTQISbiGYy+2ZDxejLR3r9yYg4bCjADMoYlWDnkEp68Nla1ZAAA)"><img class="img-fade" loading="lazy" decoding="async" src="img/work-prune-540.webp" srcset="img/work-prune-360.webp 360w, img/work-prune-540.webp 540w, img/work-prune-800.webp 800w" sizes="(min-width: 768px) 33vw, 50vw" width="2000" height="1125" alt="Worker pruning branches against a blue sky"></figure>
+        <figure class="reveal ph" style="background-image:url(data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAACwAwCdASoUAA0APu1iqk2ppaQiMAgBMB2JYgAAUBL4ef40MgMc4AD6Kh6arod6nPdYlfFVxLbBXQSgF/9be/9D++jW3/psTg224UWniorTDFWMnTsC2z0h/e63AG4OAAA=)"><img class="img-fade" loading="lazy" decoding="async" src="img/work-hedge-540.webp" srcset="img/work-hedge-360.webp 360w, img/work-hedge-540.webp 540w, img/work-hedge-800.webp 800w" sizes="(min-width: 768px) 33vw, 50vw" width="2000" height="1333" alt="Gardener trimming a row of conifers"></figure>
+        <figure class="reveal ph" style="background-image:url(data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAACwBQCdASoUABQAPu1sq1EppaOiqAqpMB2JagCxHuN1ANlqgAMzEFOBhpuuEj1YoI/4LC20A8AA/uoxs+WtDOwrZvuiEcdch/ZgskrZtL7IxmtweQ41b63Zj1U/L/NzgZBvMjZaYZTuGrnmPGGa/Jd0z37RV3ZFtIEAEtTja1wJ5ZeCcenmHceh6CC38sYyR/vrhbADNX7aOpnSuFO+AFBDnjra+4Zkq4TAAA==)"><img class="img-fade" loading="lazy" decoding="async" src="img/work-trim-540.webp" srcset="img/work-trim-360.webp 360w, img/work-trim-540.webp 540w, img/work-trim-800.webp 800w" sizes="(min-width: 768px) 33vw, 50vw" width="2000" height="2000" alt="Worker using a string trimmer on the edge of a garden"></figure>
+        <figure class="reveal ph" style="background-image:url(data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAACwAwCdASoUAA0APu1iqU2ppaOiMAgBMB2JZACsLwAA/cIcFO9GGAD9+kwxE1y/amFr8eZE9uvSM53zPJVnWGqva8XseGOdYgd8ZgdHVUccQc84B9GxcMhT8FPmdSeOCOcHq+0/3TLbPAAA)"><img class="img-fade" loading="lazy" decoding="async" src="img/work-nursery-540.webp" srcset="img/work-nursery-360.webp 360w, img/work-nursery-540.webp 540w, img/work-nursery-800.webp 800w" sizes="(min-width: 768px) 33vw, 50vw" width="2000" height="1333" alt="Gardener standing among well kept trees in a nursery"></figure>
       </div>
     </div>
   </section>
@@ -561,13 +573,13 @@ footer ul li { padding: 5px 0; }
   <section class="section" id="quote">
     <div class="wrap">
       <div class="quote-card reveal">
-        <div class="map">
-          <iframe class="img-fade" title="Map of Randburg, Johannesburg" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps?q=Randburg,+Johannesburg&z=12&output=embed"></iframe>
-          <div class="map-pill">
-            <span class="ico"><i class="ph-bold ph-map-pin" aria-hidden="true"></i></span>
-            <b>Randburg and surrounds</b>
-          </div>
+        <div class="map" id="map" data-src="https://www.google.com/maps?q=Randburg,+Johannesburg&z=12&output=embed">
+          <img class="map-static" src="img/map-600.webp" srcset="img/map-600.webp 600w, img/map-1100.webp 1100w" sizes="(min-width: 768px) 1100px, 300px" width="1100" height="600" alt="Map of Randburg, Johannesburg" loading="lazy" decoding="async">
+          <span class="map-pin" aria-hidden="true"><svg class="ico"><use href="#i-map-pin"/></svg></span>
+          <a class="map-open" href="https://www.google.com/maps/search/?api=1&amp;query=Randburg%2C+Johannesburg" target="_blank" rel="noopener">Open in Maps</a>
+          <button class="map-load" type="button"><svg class="ico" aria-hidden="true"><use href="#i-hand-tap"/></svg>Interactive map</button>
+          <small class="map-credit">&copy; OpenStreetMap</small>
+          <div class="map-pill"><span class="ico-tile"><svg class="ico" aria-hidden="true"><use href="#i-map-pin"/></svg></span><b>Randburg and surrounds</b></div>
         </div>
         <div class="quote-body">
           <div class="quote-head">
@@ -576,8 +588,8 @@ footer ul li { padding: 5px 0; }
               <p class="lead">Fill in the form and it opens in WhatsApp, ready to send. Not sure we cover your area? Ask anyway.</p>
             </div>
             <ul class="quote-facts">
-              <li><i class="ph-bold ph-clock" aria-hidden="true"></i>Mon-Fri, 7:30 to 4:30</li>
-              <li><i class="ph-bold ph-phone" aria-hidden="true"></i><a href="tel:+27765342661">+27 76 534 2661</a></li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>Mon-Fri, 7:30 to 4:30</li>
+              <li><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:+27765342661">+27 76 534 2661</a></li>
             </ul>
           </div>
           <form id="quote-form" novalidate>
@@ -612,7 +624,7 @@ footer ul li { padding: 5px 0; }
                 <textarea id="f-msg" name="message" placeholder="Tell us about the job, for example the size and number of trees."></textarea>
               </div>
               <div class="full">
-                <button class="btn btn-wa" type="submit"><i class="ph-bold ph-whatsapp-logo" aria-hidden="true"></i>Send on WhatsApp</button>
+                <button class="btn btn-wa" type="submit"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp-logo"/></svg>Send on WhatsApp</button>
               </div>
             </div>
           </form>
@@ -655,8 +667,8 @@ footer ul li { padding: 5px 0; }
 
 <!-- Floating contact buttons -->
 <div class="fab-stack" role="group" aria-label="Quick contact">
-  <a class="fab fab-call" href="tel:+27765342661" aria-label="Call us"><i class="ph-bold ph-phone" aria-hidden="true"></i></a>
-  <a class="fab fab-wa" href="https://wa.me/27765342661?text=Hi%2C%20I%20would%20like%20a%20free%20quote." target="_blank" rel="noopener" aria-label="Message us on WhatsApp"><i class="ph-bold ph-whatsapp-logo" aria-hidden="true"></i></a>
+  <a class="fab fab-call" href="tel:+27765342661" aria-label="Call us"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg></a>
+  <a class="fab fab-wa" href="https://wa.me/27765342661?text=Hi%2C%20I%20would%20like%20a%20free%20quote." target="_blank" rel="noopener" aria-label="Message us on WhatsApp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp-logo"/></svg></a>
 </div>
 
 <script>
@@ -670,7 +682,7 @@ footer ul li { padding: 5px 0; }
     menu.classList.toggle("open", open);
     burger.setAttribute("aria-expanded", String(open));
     burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
-    burger.firstElementChild.className = "ph-bold " + (open ? "ph-x" : "ph-list");
+    burger.querySelector("use").setAttribute("href", open ? "#i-x" : "#i-list");
   }
   burger.addEventListener("click", function () { setMenu(!menu.classList.contains("open")); });
   menu.addEventListener("click", function (e) { if (e.target.closest("a")) setMenu(false); });
@@ -732,6 +744,29 @@ footer ul li { padding: 5px 0; }
       fab.classList.toggle("is-hidden", visible.size > 0);
     });
     watched.forEach(function (el) { if (el) fabIo.observe(el); });
+  }
+
+  /* Map: static image first. Interactive map loads on tap, or on its own on a fast, non-data-saver connection. */
+  var mapEl = document.getElementById("map");
+  if (mapEl) {
+    var loadMap = function () {
+      if (mapEl.classList.contains("live") || mapEl.querySelector("iframe")) return;
+      var f = document.createElement("iframe");
+      f.title = "Interactive map of Randburg, Johannesburg";
+      f.referrerPolicy = "no-referrer-when-downgrade";
+      f.addEventListener("load", function () { mapEl.classList.add("live"); });
+      f.src = mapEl.getAttribute("data-src");
+      mapEl.insertBefore(f, mapEl.firstChild);
+    };
+    mapEl.querySelector(".map-load").addEventListener("click", loadMap);
+    var conn = navigator.connection;
+    var fast = conn && !conn.saveData && conn.effectiveType === "4g";
+    if (fast && "IntersectionObserver" in window) {
+      var mapIo = new IntersectionObserver(function (es) {
+        if (es[0].isIntersecting) { mapIo.disconnect(); loadMap(); }
+      }, { rootMargin: "150px" });
+      mapIo.observe(mapEl);
+    }
   }
 
   /* Fade media in once decoded, so nothing pops */
