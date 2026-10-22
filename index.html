@@ -50,16 +50,17 @@
 }
 @media all {  /* dark theme is always on; add data-theme="light" to <html> to disable */
   :root:not([data-theme="light"]) {
+    /* The only three greens: --paper (page), --band (raised surfaces), --leaf (accent) */
     --paper: #101a14;
-    --paper-2: #16241b;
+    --paper-2: #143521;      /* same green as --band */
     --ink: #f1eee5;
-    --ink-soft: #b4bfb5;
-    --line: #2a3b30;
+    --ink-soft: rgba(241, 238, 229, .72);  /* cream at reduced opacity, so no extra green */
+    --line: rgba(251, 249, 244, .14);
     --forest: #8ab63f;
-    --sage: #1a2c21;
-    --band: #143521;         /* facts strip + footer */
+    --sage: #143521;
+    --band: #143521;         /* cards, facts strip, footer */
     --leaf: #8ab63f;
-    --on-forest: #0f1b13;
+    --on-forest: #101a14;
     --shadow: 0 10px 30px -12px rgba(0, 0, 0, .6);
   }
 }
@@ -118,7 +119,7 @@ main > section.facts { padding-bottom: 8px; }
 .ico { width: 1em; height: 1em; fill: currentColor; flex: none; }
 .btn .ico { font-size: 1.25rem; }
 .btn-solid { background: var(--forest); color: var(--on-forest); }
-.btn-solid:hover { background: color-mix(in srgb, var(--forest) 85%, white); }
+.btn-solid:hover { filter: brightness(1.1); }
 .btn-light { background: var(--ink); color: var(--on-forest); }
 .btn-light:hover { background: #fff; }
 .btn-outline { border-color: rgba(251, 249, 244, .75); color: var(--ink); }
@@ -179,10 +180,10 @@ main > section.facts { padding-bottom: 8px; }
     linear-gradient(180deg, rgba(16, 26, 20, .1) 0%, rgba(16, 26, 20, .45) 40%, rgba(16, 26, 20, .82) 70%, rgba(16, 26, 20, .96) 100%);
 }
 .hero-in { padding-block: 60px calc(26px + var(--sheet-r)); }
-.eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 700 .78rem/1 "DM Sans", sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #b9e35f; }
-.eyebrow::before { content: ""; width: 22px; height: 2px; background: currentColor; }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 700 .78rem/1 "DM Sans", sans-serif; letter-spacing: .16em; text-transform: uppercase; color: var(--ink); text-shadow: 0 1px 14px rgba(0, 0, 0, .6); }
+.eyebrow::before { content: ""; width: 22px; height: 2px; background: var(--leaf); }
 .hero h1 { font-size: clamp(2.4rem, 9.5vw, 4.8rem); font-weight: 800; max-width: 13ch; margin-top: 14px; text-wrap: balance; text-shadow: 0 2px 24px rgba(0, 0, 0, .45); }
-.hero h1 em { font-style: normal; color: #b9e35f; }
+.hero h1 em { font-style: normal; color: var(--leaf); }
 .hero p { margin-top: 14px; max-width: 38ch; font-size: 1.05rem; color: var(--ink); }
 .hero-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 22px; }
 .hero-cta .btn { padding: 0 12px; }
@@ -301,12 +302,12 @@ form { display: block; }
 .field label { font-weight: 700; font-size: .95rem; }
 .field input, .field select, .field textarea {
   width: 100%; min-height: 54px; padding: 12px 14px;
-  border-radius: var(--radius); border: 2px solid var(--line);
-  background: #fff; color: #17251c;
+  border-radius: var(--radius); border: 2px solid var(--band);
+  background: #fff; color: var(--paper);
   font: 500 1rem "DM Sans", sans-serif;
 }
 .field textarea { min-height: 110px; resize: vertical; }
-.field input::placeholder, .field textarea::placeholder { color: #5f6c63; }
+.field input::placeholder, .field textarea::placeholder { color: rgba(16, 26, 20, .6); }
 .field input:focus, .field select:focus, .field textarea:focus { outline: 3px solid var(--leaf); border-color: var(--leaf); }
 .field .err { display: none; font-size: .9rem; font-weight: 700; color: #b3361a; }
 .field.invalid .err { display: block; }
@@ -314,8 +315,8 @@ form { display: block; }
 @media all {  /* dark theme is always on; add data-theme="light" to <html> to disable */
   :root:not([data-theme="light"]) .field .err { color: #ff9c80; }
 }
-.btn-wa { background: #25d366; color: var(--on-forest); width: 100%; }
-.btn-wa:hover { background: #3be07a; }
+.btn-wa { background: var(--leaf); color: var(--on-forest); width: 100%; }
+.btn-wa:hover { filter: brightness(1.1); }
 .small { font-size: .9rem; color: var(--ink-soft); }
 
 /* ---------- Footer ---------- */
@@ -325,12 +326,12 @@ footer a:hover { color: var(--leaf); }
 footer h3 { font-size: 1rem; margin-bottom: 10px; color: var(--ink); }
 footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: .95rem; }
 footer li { padding: 5px 0; }
-.foot-cta { padding-top: 28px; color: #10200f; }
+.foot-cta { padding-top: 28px; color: var(--on-forest); }
 .foot-cta .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px 32px; flex-wrap: wrap; padding: 26px 22px; background: var(--leaf); border-radius: calc(var(--radius) + 6px); }
 .foot-cta h2 { font-size: clamp(1.4rem, 3vw, 2.1rem); }
 .foot-cta p { margin: 6px 0 0; }
-.foot-cta .btn { background: #10200f; color: #fff; }
-.foot-cta .btn:hover { background: #000; color: #fff; }
+.foot-cta .btn { background: var(--paper); color: #fff; }
+.foot-cta .btn:hover { filter: brightness(1.4); color: #fff; }
 .foot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 20px; padding-block: 36px 24px; }
 .foot-brand { grid-column: 1 / -1; }
 .foot-blurb { margin: 12px 0 0; max-width: 38ch; font-size: .95rem; color: var(--ink-soft); }
@@ -352,9 +353,9 @@ footer li { padding: 5px 0; }
   transition: transform .2s cubic-bezier(.16, 1, .3, 1), background-color .2s;
 }
 .fab:active { transform: scale(.94); }
-.fab-call { background: var(--forest); color: var(--on-forest); }
-.fab-wa { background: #25d366; color: var(--on-forest); }
-.fab-wa:hover { background: #3be07a; }
+.fab-call { background: var(--band); color: var(--leaf); border: 2px solid var(--leaf); }
+.fab-wa { background: var(--leaf); color: var(--on-forest); }
+.fab-wa:hover { filter: brightness(1.1); }
 
 /* ---------- Motion ---------- */
 @media (prefers-reduced-motion: no-preference) {
@@ -395,7 +396,7 @@ footer li { padding: 5px 0; }
   .q-grid .full { grid-column: 1 / -1; }
   .foot-cta { padding-top: 48px; }
   .foot-cta .wrap { padding: 36px 44px; }
-  .foot-grid { grid-template-columns: 2fr 1fr 1fr 1fr; gap: 36px 28px; padding-block: 56px 40px; }
+  .foot-grid { grid-template-columns: 2fr 1fr 1fr; gap: 36px 28px; padding-block: 56px 40px; }
   .foot-brand { grid-column: auto; }
   footer ul { font-size: 1rem; gap: 6px; }
   footer li { padding: 0; }
@@ -462,7 +463,7 @@ footer li { padding: 5px 0; }
       <h1 id="hero-title">Tree felling and <em>garden care</em>, done properly</h1>
       <p>Felling, pruning, stump removal, lawns and landscaping from one local team.</p>
       <div class="hero-cta">
-        <a class="btn btn-wa" href="https://wa.me/27765342661?text=Hi%2C%20I%20would%20like%20a%20free%20quote." target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp-logo"/></svg>Free quote</a>
+        <a class="btn btn-wa" href="https://wa.me/27765342661?text=Hi%20Best%20Tree%20Felling%20and%20Landscaping%2C%20I%27d%20like%20a%20free%20quote%20please." target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp-logo"/></svg>Free quote</a>
         <a class="btn btn-outline" href="tel:+27765342661"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>Call us</a>
       </div>
     </div>
@@ -663,22 +664,13 @@ footer li { padding: 5px 0; }
         </a>
         <p class="foot-blurb">Tree felling and landscaping in Randburg and surrounds.</p>
       </div>
-      <div class="foot-services">
-        <h3>Services</h3>
+      <div class="foot-jump">
+        <h3>Jump to</h3>
         <ul>
-          <li><a href="#services">Tree felling</a></li>
-          <li><a href="#services">Pruning and trimming</a></li>
-          <li><a href="#services">Stump removal</a></li>
-          <li><a href="#services">Landscaping</a></li>
-        </ul>
-      </div>
-      <div class="foot-areas">
-        <h3>Areas</h3>
-        <ul>
-          <li><a href="#areas">Randburg</a></li>
-          <li><a href="#areas">Ferndale</a></li>
-          <li><a href="#areas">Bryanston</a></li>
-          <li><a href="#areas">Northcliff</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#work">Our work</a></li>
+          <li><a href="#areas">Areas</a></li>
+          <li><a href="#quote">Quote</a></li>
         </ul>
       </div>
       <div class="foot-contact">
@@ -686,7 +678,6 @@ footer li { padding: 5px 0; }
         <ul>
           <li><a href="tel:+27765342661">+27 76 534 2661</a></li>
           <li class="foot-muted">Mon-Fri, 7:30 to 4:30</li>
-          <li><a href="#quote">Get a quote</a></li>
         </ul>
       </div>
     </div>
@@ -697,7 +688,7 @@ footer li { padding: 5px 0; }
 <!-- Floating contact buttons -->
 <div class="fab-stack" role="group" aria-label="Quick contact">
   <a class="fab fab-call" href="tel:+27765342661" aria-label="Call us"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg></a>
-  <a class="fab fab-wa" href="https://wa.me/27765342661?text=Hi%2C%20I%20would%20like%20a%20free%20quote." target="_blank" rel="noopener" aria-label="Message us on WhatsApp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp-logo"/></svg></a>
+  <a class="fab fab-wa" href="https://wa.me/27765342661?text=Hi%20Best%20Tree%20Felling%20and%20Landscaping%2C%20I%27d%20like%20a%20free%20quote%20please." target="_blank" rel="noopener" aria-label="Message us on WhatsApp"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp-logo"/></svg></a>
 </div>
 
 <script>
@@ -746,14 +737,14 @@ footer li { padding: 5px 0; }
     if (!ok) return;
 
     var v = function (id) { return document.getElementById(id).value.trim(); };
+    var service = v("f-service");
+    var want = service === "Something else" ? "a free quote" : "a free quote for " + service.toLowerCase();
     var lines = [
-      "Hi, I would like a free quote.",
-      "",
-      "Name: " + v("f-name"),
-      "Suburb: " + v("f-suburb"),
-      "Service: " + v("f-service")
+      "Hi Best Tree Felling and Landscaping, my name is " + v("f-name") + ".",
+      "I'm in " + v("f-suburb") + " and I'd like " + want + "."
     ];
-    if (v("f-msg")) lines.push("Details: " + v("f-msg"));
+    if (v("f-msg")) lines.push("", "Some details: " + v("f-msg"));
+    lines.push("", "Please let me know when you could come and have a look. Thank you!");
     window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(lines.join("\n")), "_blank", "noopener");
   });
   form.addEventListener("input", function (e) {
