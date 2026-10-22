@@ -94,8 +94,7 @@ p { margin: 0; }
 /* Section transitions, style A: flat and clean.
    Straight edges, a thin rule between light sections, a green band under the hero. */
 main > section + section { position: relative; }
-main > section.section:not(.process),
-main > section.areas { border-top: 1px solid var(--line); }
+main > section.section:not(.process) { border-top: 1px solid var(--line); }
 main > section.section.process + section.section { border-top: 0; }
 main + footer { position: relative; }
 main > section:not(.hero) { padding-bottom: var(--section-y); }
@@ -164,7 +163,7 @@ main > section.facts { padding-bottom: 8px; }
 /* ---------- Hero ---------- */
 .hero {
   position: relative; isolation: isolate;
-  min-height: calc(100dvh - var(--head-h) - var(--bar-h));
+  min-height: min(540px, calc(100dvh - var(--head-h) - var(--bar-h)));
   display: flex; align-items: flex-end;
   color: var(--ink); background: var(--paper);
   overflow: hidden;
@@ -173,16 +172,20 @@ main > section.facts { padding-bottom: 8px; }
 .img-fade { opacity: 0; transition: opacity .8s cubic-bezier(.22, 1, .36, 1); }
 .img-fade.loaded { opacity: 1; }
 @media (prefers-reduced-motion: reduce) { .img-fade { opacity: 1; transition: none; } }
-.hero-img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+.hero-img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; filter: saturate(1.25) brightness(1.1) contrast(1.05); }
 .hero::after {
   content: ""; position: absolute; inset: 0; z-index: -1;
   background:
-    linear-gradient(180deg, rgba(16, 26, 20, .45) 0%, rgba(16, 26, 20, .3) 35%, rgba(16, 26, 20, .9) 100%);
+    linear-gradient(180deg, rgba(16, 26, 20, .1) 0%, rgba(16, 26, 20, .45) 40%, rgba(16, 26, 20, .82) 70%, rgba(16, 26, 20, .96) 100%);
 }
-.hero-in { padding-block: 40px calc(44px + var(--sheet-r)); }
-.hero h1 { font-size: clamp(2.5rem, 11vw, 5.4rem); font-weight: 800; max-width: 14ch; text-wrap: balance; }
-.hero p { margin-top: 18px; max-width: 34ch; font-size: 1.1rem; color: var(--ink); }
-.hero-cta { display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
+.hero-in { padding-block: 60px calc(26px + var(--sheet-r)); }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 700 .78rem/1 "DM Sans", sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #b9e35f; }
+.eyebrow::before { content: ""; width: 22px; height: 2px; background: currentColor; }
+.hero h1 { font-size: clamp(2.4rem, 9.5vw, 4.8rem); font-weight: 800; max-width: 13ch; margin-top: 14px; text-wrap: balance; text-shadow: 0 2px 24px rgba(0, 0, 0, .45); }
+.hero h1 em { font-style: normal; color: #b9e35f; }
+.hero p { margin-top: 14px; max-width: 38ch; font-size: 1.05rem; color: var(--ink); }
+.hero-cta { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 22px; }
+.hero-cta .btn { padding: 0 12px; }
 
 .facts { background: var(--band); color: var(--ink); padding-top: 8px; }  /* deep forest, own colour so the footer keeps --band */
 .facts ul { list-style: none; margin: 0; padding: 0; display: grid; }
@@ -248,12 +251,14 @@ main > section.section.process { position: relative; isolation: isolate; overflo
 .gallery .wide { grid-column: 1 / -1; }
 .gallery .wide img { aspect-ratio: 16 / 9; }
 
-/* ---------- Areas ---------- */
-.areas { background: var(--sage); }
-.area-row { list-style: none; margin: 18px -16px 0; padding: 2px 16px 8px; display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; }
+/* ---------- Areas (inside the work section) ---------- */
+.areas { margin-top: 26px; padding-top: 26px; border-top: 1px solid var(--line); }
+.areas-label { display: flex; align-items: center; gap: 10px; font: 700 .8rem/1 "DM Sans", sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--forest); }
+.areas-label .ico { font-size: 1.2em; }
+.area-row { list-style: none; margin: 14px -16px 0; padding: 2px 16px 8px; display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: 16px; scrollbar-width: none; }
 .area-row::-webkit-scrollbar { display: none; }
-.area-row li { flex: none; scroll-snap-align: start; padding: 8px 14px; border-radius: 99px; background: var(--paper); border: 1px solid var(--line); font-weight: 500; font-size: .95rem; white-space: nowrap; }
-.area-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 12px; padding-top: 16px; border-top: 1px solid var(--line); }
+.area-row li { flex: none; scroll-snap-align: start; padding: 8px 14px; border-radius: 99px; background: var(--paper-2); border: 1px solid var(--line); font-weight: 500; font-size: .95rem; white-space: nowrap; }
+.area-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 12px; }
 .area-meta > * { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; text-decoration: none; }
 .area-meta .ico { color: var(--forest); font-size: 1.1em; }
 .area-meta span { color: var(--ink-soft); }
@@ -367,7 +372,9 @@ footer li { padding: 5px 0; }
 /* ---------- Tablet / desktop ---------- */
 @media (min-width: 768px) {
   :root { --sheet-r: 0px; --section-y: 104px; }
-  .hero-cta { flex-direction: row; }
+  .hero-cta { display: flex; gap: 12px; }
+  .hero-cta .btn { padding: 0 22px; }
+  .hero-cta .btn-wa { width: auto; }
   .facts ul { grid-template-columns: repeat(3, 1fr); }
   .facts li { border-bottom: 0; padding: 26px 28px; }
   .facts li:first-child { padding-left: 0; }
@@ -380,7 +387,7 @@ footer li { padding: 5px 0; }
   .gallery figure { grid-column: span 2; }
   .gallery .wide { grid-column: span 4; }
   .gallery img, .gallery .wide img { aspect-ratio: auto; }
-  .area-row { flex-wrap: wrap; overflow-x: visible; margin: 18px 0 0; padding: 0; }
+  .area-row { flex-wrap: wrap; overflow-x: visible; margin: 14px 0 0; padding: 0; }
   .map { min-height: 300px; }
   .quote-body { padding: 40px 44px 44px; }
   .quote-head { grid-template-columns: 1fr auto; align-items: end; }
@@ -402,8 +409,8 @@ footer li { padding: 5px 0; }
   .nav-desktop a { text-decoration: none; font-weight: 700; }
   .nav-desktop a:hover { color: var(--forest); }
   .head-cta { display: inline-flex; min-height: 46px; }
-  .hero { min-height: min(760px, calc(100dvh - var(--head-h))); }
-  .hero-in { padding-block: 72px calc(72px + var(--sheet-r)); }
+  .hero { min-height: min(620px, calc(100dvh - var(--head-h))); }
+  .hero-in { padding-block: 90px calc(50px + var(--sheet-r)); }
   main > section.section.process { padding-block: 200px 220px; }
   .process-list { grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: start; }
   .process-list li:nth-child(2) { margin-top: 48px; }
@@ -445,17 +452,18 @@ footer li { padding: 5px 0; }
 <main id="top">
 
   <!-- Hero: image first, text overlaid -->
-  <section class="hero ph" aria-labelledby="hero-title" style="background-image:url(data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADQAwCdASoUAA0APu1iqU2ppaOiMAgBMB2JYwCdMoACEenYcQgBTYAA/rwmo/oQAg3TaiVsMe3r4XNC30MhgdKvbyhvZpsqZGUwgnbwkZk6cKIWvICBOXmHied64A06sDx8/ikmzeMOYVZBcycqLFIgAAA=)">
+  <section class="hero ph" aria-labelledby="hero-title" style="background-image:url(data:image/webp;base64,UklGRmoCAABXRUJQVlA4WAoAAAAgAAAAEwAADAAASUNDUMgBAAAAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADZWUDggfAAAAJADAJ0BKhQADQA+0VSjS6gkoyGwCAEAGglAAAfFcAIPf8RWuWAA/q0UaRdEgLhZf5QRfKJGpBL6L04JQ89vDan9X6UeGqaZ9/HoVMUe3a6v0A0mSXj6v3CEtkNuqFUmTuyONfnzzrSYUxwdYgEwRXXyWw2VGqwGHccAAAA=)">
     <picture>
       <source media="(min-width: 768px)" srcset="img/hero-480.webp 480w, img/hero-800.webp 800w, img/hero-1200.webp 1200w" sizes="100vw">
-      <img class="hero-img img-fade" src="img/hero-800.webp" srcset="img/hero-480.webp 480w, img/hero-800.webp 800w" sizes="100vw" width="2000" height="1333" alt="Looking up into a lush green tree canopy" fetchpriority="high" decoding="async">
+      <img class="hero-img img-fade" src="img/hero-800.webp" srcset="img/hero-480.webp 480w, img/hero-800.webp 800w" sizes="100vw" width="1600" height="1067" alt="Looking up a sunlit tree trunk into a lush green canopy" fetchpriority="high" decoding="async">
     </picture>
     <div class="wrap hero-in">
-      <h1 id="hero-title">Best Tree Felling and Landscaping</h1>
-      <p>Tree felling, pruning and garden work across Randburg. Message us for a quote.</p>
+      <span class="eyebrow">Randburg and surrounds</span>
+      <h1 id="hero-title">Tree felling and <em>garden care</em>, done properly</h1>
+      <p>Felling, pruning, stump removal, lawns and landscaping from one local team.</p>
       <div class="hero-cta">
-        <a class="btn btn-light" href="#quote"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp-logo"/></svg>Get a free quote</a>
-        <a class="btn btn-outline" href="tel:+27765342661"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>Call 076 534 2661</a>
+        <a class="btn btn-wa" href="https://wa.me/27765342661?text=Hi%2C%20I%20would%20like%20a%20free%20quote." target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-whatsapp-logo"/></svg>Free quote</a>
+        <a class="btn btn-outline" href="tel:+27765342661"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>Call us</a>
       </div>
     </div>
   </section>
@@ -547,8 +555,8 @@ footer li { padding: 5px 0; }
   <!-- Work -->
   <section class="section" id="work">
     <div class="wrap">
-      <h2 class="reveal">Our work</h2>
-      <p class="lead reveal">Examples of the jobs we take on.</p>
+      <h2 class="reveal">Our work, across Randburg</h2>
+      <p class="lead reveal">Recent jobs, and the suburbs we cover.</p>
       <div class="gallery">
         <figure class="wide reveal ph" style="background-image:url(data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAADwAwCdASoUAAsAPu1iqU2ppaOiMAgBMB2JZgCdMoHggAMbtyPyKFQAAP7dHLzNH8V9CaeVpJYiLGXOQm1iu5Nmzd4WyAf3mG0RBnjHB990lrTt9fMGQWNLTGSfXLRyucQeEnF5J05rhGlw78LXU12NmcWp3CmIcHSjay/KxMtPnytGN8gAAA==)"><img class="img-fade" loading="lazy" decoding="async" src="img/work-lawn-800.webp" srcset="img/work-lawn-480.webp 480w, img/work-lawn-800.webp 800w, img/work-lawn-1200.webp 1200w" sizes="(min-width: 768px) 66vw, 100vw" width="1200" height="675" alt="Blue lawn mower on a freshly cut lawn"><figcaption>Lawn mowing</figcaption></figure>
         <figure class="reveal ph" style="background-image:url(data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAABQBQCdASoUABQAPu1sqlEppaOiqAqpMB2JZQDI1BBWM2M7S0ij4p8xOCG8v/oY7waMogAA/nGVZUIrqd/Tal00SUXlyZdLJLo02LpujLyzV/LZjq45ToYDzLTgHf3rS9JGEoSgFEZf8RmDxXU06BECIx90Imd8GyFOZC2PNSNeSPxc4NlG5wVKDRwAAA==)"><img class="img-fade" loading="lazy" decoding="async" src="img/work-stump-540.webp" srcset="img/work-stump-360.webp 360w, img/work-stump-540.webp 540w, img/work-stump-800.webp 800w" sizes="(min-width: 768px) 33vw, 50vw" width="800" height="800" alt="Freshly cut tree stump with sawdust"><figcaption>Stump removal</figcaption></figure>
@@ -556,22 +564,17 @@ footer li { padding: 5px 0; }
         <figure class="reveal ph" style="background-image:url(data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAABwBQCdASoUABQAPu1wr1IppiQiqAgBMB2JZQCxH6JGA1gYbtngLmmemzuEDWHETUHC85sAAMxn7JiicBbrg/pW/AnzEbGZQ83MglNK9DqMBNzS+VybKR0Bex0ji81xbxt0BqJMLEJJ/Q41EkTXd7DCqV4+0IAtYdhMfdDrhnpxHpNcxXeYrjMfAHXSNvch+YOf4tRuT2u/3HK2cBuADSZ1f7QUmv55D8aXiPN79mAIMtQAAAA=)"><img class="img-fade" loading="lazy" decoding="async" src="img/work-logs-540.webp" srcset="img/work-logs-360.webp 360w, img/work-logs-540.webp 540w, img/work-logs-800.webp 800w" sizes="(min-width: 768px) 33vw, 50vw" width="800" height="800" alt="Stack of freshly cut logs"><figcaption>Wood removal</figcaption></figure>
         <figure class="reveal ph" style="background-image:url(data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAABQAwCdASoUABQAPu1qrlCppaQiqAqpMB2JQBadABkCtMz+aAD+pdQHzYj59rOw13iVIeOKjgt7rI1RySVS2aFf6v9VU9wDZAJaWmFah0esgAUIRUD7PCqJXSmF5BkKRiEAAjuCNZm75llHXr3m8mgA)"><img class="img-fade" loading="lazy" decoding="async" src="img/work-storm-540.webp" srcset="img/work-storm-360.webp 360w, img/work-storm-540.webp 540w, img/work-storm-800.webp 800w" sizes="(min-width: 768px) 33vw, 50vw" width="800" height="800" alt="Fallen pine tree on a lawn after a storm"><figcaption>Storm clean-up</figcaption></figure>
       </div>
-    </div>
-  </section>
-
-  <!-- Areas + hours -->
-  <section class="section areas" id="areas">
-    <div class="wrap reveal">
-      <h2>Where we work</h2>
-      <p class="lead">Not on the list? Message us and we will tell you if we can get to you.</p>
-      <ul class="area-row">
-        <li>Randburg</li><li>Ferndale</li><li>Blairgowrie</li><li>Fontainebleau</li>
-        <li>Linden</li><li>Northcliff</li><li>Bryanston</li><li>Sundowner</li>
-        <li>Bromhof</li><li>Darrenwood</li><li>Windsor</li><li>Randpark Ridge</li>
-      </ul>
-      <div class="area-meta">
-        <a href="tel:+27765342661"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>+27 76 534 2661</a>
-        <span><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>Mon-Fri, 7:30 to 4:30</span>
+      <div class="areas" id="areas">
+        <span class="areas-label"><svg class="ico" aria-hidden="true"><use href="#i-map-pin"/></svg>Areas we cover</span>
+        <ul class="area-row">
+          <li>Randburg</li><li>Ferndale</li><li>Blairgowrie</li><li>Fontainebleau</li>
+          <li>Linden</li><li>Northcliff</li><li>Bryanston</li><li>Sundowner</li>
+          <li>Bromhof</li><li>Darrenwood</li><li>Windsor</li><li>Randpark Ridge</li>
+        </ul>
+        <div class="area-meta">
+          <a href="tel:+27765342661"><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>+27 76 534 2661</a>
+          <span><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg>Mon-Fri, 7:30 to 4:30</span>
+        </div>
       </div>
     </div>
   </section>
