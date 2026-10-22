@@ -1,0 +1,28 @@
+{
+  "name": "Best Tree Felling and Landscaping",
+  "short_name": "Best Trees",
+  "description": "Tree felling, pruning, stump removal and landscaping in Randburg and surrounds.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "browser",
+  "background_color": "#101a14",
+  "theme_color": "#101a14",
+  "icons": [
+    {
+      "src": "favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
